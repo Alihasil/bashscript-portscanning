@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Check if an IP address is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <ip_address>"
+    exit 1
+fi
+
+ip_address=$1
+
+# Port range to scan (you can modify this)
+start_port=1
+end_port=1024
+
+echo "Scanning ports on $ip_address..."
+
+for (( port=$start_port; port<=$end_port; port++ )); do
+    timeout 1 bash -c "echo > /dev/tcp/$ip_address/$port" &>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "Port $port is open"
+    fi
+done
+
+echo "Port scanning completed."
